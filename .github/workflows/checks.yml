@@ -26,3 +26,49 @@ jobs:
           print("files with findings:", sorted(found))
           sys.exit(1 if found else 0)
           PY
+  terraform-fmt:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash scripts/ci/install-tool.sh terraform
+      - run: bash scripts/ci/terraform-fmt.sh
+  terraform-validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash scripts/ci/install-tool.sh terraform
+      - run: bash scripts/ci/terraform-validate.sh
+  helm-kubeconform:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash scripts/ci/install-tool.sh helm kubeconform
+      - run: bash scripts/ci/helm-kubeconform.sh
+  kubeconform-manifests:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      # kubectl is preinstalled on the runner image; fail early if that changes.
+      - run: command -v kubectl
+      - run: bash scripts/ci/install-tool.sh kubeconform
+      - run: bash scripts/ci/kubeconform-manifests.sh
+  ruff:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash scripts/ci/install-tool.sh ruff
+      - run: bash scripts/ci/ruff.sh
+  pytest:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: bash scripts/ci/pytest.sh
+  shellcheck:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash scripts/ci/install-tool.sh shellcheck
+      - run: bash scripts/ci/shellcheck.sh

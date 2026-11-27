@@ -1,15 +1,23 @@
 # secrets and local state: never commit
+# *.tfvars.example does not match *.tfvars, so no negation rule is needed
 *.tfvars
-!*.tfvars.example
+*.auto.tfvars
+terraform.tfvars.json
 backend.hcl
 .terraform/
-*.tfstate
-*.tfstate.*
+*.tfstate*
+crash.log
+override.tf
 .kube/
-.env
-.env.*
+kubeconfig*
+.env*
 *.pem
 *.key
+*.crt
+*.log
+# .terraform.lock.hcl is deliberately NOT ignored: it must be committed
+# benchmark output
+harness/results/
 # python
 __pycache__/
 .venv/

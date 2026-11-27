@@ -1,0 +1,5 @@
+# Helm charts that CI renders and checks with kubeconform (job: helm-kubeconform).
+# One target per line, five fields separated by spaces:
+#   <repo-name> <repo-url> <chart> <version> <values-file>
+# <values-file> is a path relative to the repository root. See docs/ci.md.
+# No entries yet: issue 09 adds the first one.
