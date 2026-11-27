@@ -1,0 +1,4 @@
+# Calico release installed by scripts/kind-up.sh. The version is UNVERIFIED.
+# Format: <version> <sha256 of manifests/calico.yaml for that version>
+# See docs/kind.md for how to fill in the checksum. Keep the pragma (secret-scan).
+v3.31.0 REPLACE_ME  # pragma: allowlist secret
