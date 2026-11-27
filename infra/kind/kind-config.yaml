@@ -1,0 +1,29 @@
+# Local cluster that looks like AKS to the scheduler: one system worker, one tainted inference worker.
+# No extraPortMappings and no ingress: access is by kubectl port-forward only.
+# The node image version is UNVERIFIED. It must be published for your kind release (see docs/kind.md).
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: afinf
+networking:
+  # kindnet is replaced by Calico (installed by scripts/kind-up.sh), so NetworkPolicy is enforced.
+  disableDefaultCNI: true
+  podSubnet: 10.244.0.0/16
+nodes:
+  - role: control-plane
+    image: kindest/node:v1.34.0
+  # system worker
+  - role: worker
+    image: kindest/node:v1.34.0
+  # inference worker
+  - role: worker
+    image: kindest/node:v1.34.0
+    labels:
+      workload: inference
+    kubeadmConfigPatches:
+      - |
+        kind: JoinConfiguration
+        nodeRegistration:
+          taints:
+            - key: workload
+              value: inference
+              effect: NoSchedule
