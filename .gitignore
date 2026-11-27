@@ -6,10 +6,16 @@ terraform.tfvars.json
 backend.hcl
 .terraform/
 *.tfstate*
+# saved plans can contain secret values
+*.tfplan
+tfplan*
 crash.log
 override.tf
+*_override.tf
+override.tf.json
+*_override.tf.json
+# kubeconfigs belong under .kube/ only; this covers kubeconfig and *-config files there
 .kube/
-kubeconfig*
 .env*
 *.pem
 *.key

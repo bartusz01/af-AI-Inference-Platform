@@ -1,30 +1,31 @@
 #!/usr/bin/env bash
-# init (no backend) + validate for every layer in infra/terraform/. "modules" is not a layer.
+# init (no backend) + validate for every directory in the repo that contains .tf files.
+# Directories named "modules" (not layers) or ".terraform" (downloads) are skipped, with everything below them.
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
-base="infra/terraform"
-if [[ ! -d "$base" ]]; then
-  echo "nothing to check: $base does not exist"
+tf_files="$(find . -type d \( -name .git -o -name .terraform -o -name modules \) -prune \
+  -o -type f -name '*.tf' -print)"
+if [[ -z "$tf_files" ]]; then
+  echo "nothing to check: no directory outside modules/ contains .tf files"
   exit 0
 fi
+layers="$(while IFS= read -r file; do dirname "$file"; done <<<"$tf_files" | sort -u)"
 
 data="$(mktemp -d)"
 trap 'rm -rf "$data"' EXIT
 checked=0
-for layer in "$base"/*/; do
-  layer="${layer%/}"
-  name="${layer##*/}"
-  [[ -d "$layer" && "$name" != "modules" ]] || continue
-  tf_files="$(find "$layer" -maxdepth 1 -type f -name '*.tf')"
-  [[ -n "$tf_files" ]] || continue
+while IFS= read -r layer; do
+  layer="${layer#./}"
   echo "== $layer"
-  # A throwaway data dir never touches a local, already initialised backend.
-  TF_DATA_DIR="$data/$name" terraform -chdir="$layer" init -backend=false -input=false
-  TF_DATA_DIR="$data/$name" terraform -chdir="$layer" validate
+  init_args=(-backend=false -input=false)
+  # A lock file in the checkout is a committed one: init must not change it.
+  if [[ -f "$layer/.terraform.lock.hcl" ]]; then
+    init_args+=(-lockfile=readonly)
+  fi
   checked=$((checked + 1))
-done
-
-if [[ "$checked" -eq 0 ]]; then
-  echo "nothing to check: no layer under $base contains .tf files"
-fi
+  # A throwaway data dir never touches a local, already initialised backend.
+  # stdin is redirected so terraform cannot consume the list of layers.
+  TF_DATA_DIR="$data/$checked" terraform -chdir="$layer" init "${init_args[@]}" </dev/null
+  TF_DATA_DIR="$data/$checked" terraform -chdir="$layer" validate </dev/null
+done <<<"$layers"

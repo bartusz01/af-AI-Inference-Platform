@@ -10,12 +10,16 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - run: pip install yamllint==1.35.1
       - run: yamllint --strict .
   secret-scan:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - run: pip install detect-secrets==1.5.0
       - name: Scan all files and fail on any finding
         run: |
@@ -30,24 +34,32 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - run: bash scripts/ci/install-tool.sh terraform
       - run: bash scripts/ci/terraform-fmt.sh
   terraform-validate:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - run: bash scripts/ci/install-tool.sh terraform
       - run: bash scripts/ci/terraform-validate.sh
   helm-kubeconform:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - run: bash scripts/ci/install-tool.sh helm kubeconform
       - run: bash scripts/ci/helm-kubeconform.sh
   kubeconform-manifests:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       # kubectl is preinstalled on the runner image; fail early if that changes.
       - run: command -v kubectl
       - run: bash scripts/ci/install-tool.sh kubeconform
@@ -56,12 +68,16 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - run: bash scripts/ci/install-tool.sh ruff
       - run: bash scripts/ci/ruff.sh
   pytest:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
@@ -70,5 +86,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - run: bash scripts/ci/install-tool.sh shellcheck
       - run: bash scripts/ci/shellcheck.sh
