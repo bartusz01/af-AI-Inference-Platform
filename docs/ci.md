@@ -73,15 +73,15 @@ work (`helm repo add`), not `oci://`.
 
 ## Pinned versions
 
-All versions are **unverified**: they were chosen without access to any registry.
+All versions are **unverified** by the agents, which have no access to any registry.
 
 | Tool | Version | URL | Checksum status |
 |---|---|---|---|
-| terraform | 1.13.5 | <https://releases.hashicorp.com/terraform/1.13.5/terraform_1.13.5_linux_amd64.zip> | `REPLACE_ME` |
-| helm | 3.19.0 | <https://get.helm.sh/helm-v3.19.0-linux-amd64.tar.gz> | `REPLACE_ME` |
-| kubeconform | 0.7.0 | <https://github.com/yannh/kubeconform/releases/download/v0.7.0/kubeconform-linux-amd64.tar.gz> | `REPLACE_ME` |
-| ruff | 0.14.5 | <https://github.com/astral-sh/ruff/releases/download/0.14.5/ruff-x86_64-unknown-linux-gnu.tar.gz> | `REPLACE_ME` |
-| shellcheck | 0.11.0 | <https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.linux.x86_64.tar.xz> | `REPLACE_ME` |
+| terraform | 1.17.2 | <https://releases.hashicorp.com/terraform/1.17.2/terraform_1.17.2_linux_amd64.zip> | sha256 in `ci/tool-versions.env` |
+| helm | 3.22.1 | <https://get.helm.sh/helm-v3.22.1-linux-amd64.tar.gz> | sha256 in `ci/tool-versions.env` |
+| kubeconform | 0.8.0 | <https://github.com/yannh/kubeconform/releases/download/v0.8.0/kubeconform-linux-amd64.tar.gz> | sha256 in `ci/tool-versions.env` |
+| ruff | 0.17.6 | <https://github.com/astral-sh/ruff/releases/download/0.17.6/ruff-x86_64-unknown-linux-gnu.tar.gz> | sha256 in `ci/tool-versions.env` |
+| shellcheck | 0.11.0 | <https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.linux.x86_64.tar.xz> | sha256 in `ci/tool-versions.env` |
 | kubectl | runner image | preinstalled on `ubuntu-24.04` | not downloaded |
 | actions/checkout | v4 | GitHub Actions | tag, not a commit SHA |
 | actions/setup-python | v5 | GitHub Actions | tag, not a commit SHA |
