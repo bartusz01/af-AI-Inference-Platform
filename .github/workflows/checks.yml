@@ -1,0 +1,28 @@
+name: checks
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  yaml-lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install yamllint==1.35.1
+      - run: yamllint --strict .
+  secret-scan:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install detect-secrets==1.5.0
+      - name: Scan all files and fail on any finding
+        run: |
+          detect-secrets scan --all-files --exclude-files '^[.]git/' > /tmp/secrets.json
+          python3 - <<'PY'
+          import json, sys
+          found = json.load(open("/tmp/secrets.json"))["results"]
+          print("files with findings:", sorted(found))
+          sys.exit(1 if found else 0)
+          PY
